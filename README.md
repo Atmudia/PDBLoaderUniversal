@@ -15,3 +15,6 @@ To install the PDBLoaderUniversal mod, follow these steps:
 5. Launch your game and experience the magic of the PDBLoaderUniversal mod!
 
 With this mod, you can easily locate errors in your mod and improve its performance and stability. Happy modding!
+
+#### Credits:
+For converting MDB to PDB: [pdb2mdb](https://gist.github.com/jbevain/ba23149da8369e4a966f)
