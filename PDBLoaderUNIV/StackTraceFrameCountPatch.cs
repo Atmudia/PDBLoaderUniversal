@@ -1,20 +1,30 @@
-﻿using System.Diagnostics;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Reflection;
 using HarmonyLib;
 
 namespace PDBLoaderUNIV
 {
-    [HarmonyPatch(typeof(StackTrace), "FrameCount", MethodType.Getter)]
-    
-    public class StackTraceFrameCountPatch
+    [HarmonyPatch]
+    public static class StackTracePatch
     {
-        public static FieldInfo StackTraceFrames = typeof(StackTrace).GetField("frames", AccessTools.all);
-        public static void Prefix(StackTrace __instance, ref int __result)
+        [HarmonyTargetMethods]
+        public static IEnumerable<MethodBase> TargetMethods()
         {
-            var o = (StackFrame[])StackTraceFrames.GetValue(__instance);
-            if (__result == 0 && o == null) return;
-            foreach (var stackFrame in o) 
-                StackTracesUtility.ChangeFrame(stackFrame);
+            return typeof(StackTrace).GetConstructors(AccessTools.all);
+        }
+
+        [HarmonyPostfix]
+        public static void StackTrace_Constructors(StackTrace __instance)
+        {
+            var frames = __instance.GetFrames();
+            if (frames != null)
+            {
+                foreach (var frame in frames)
+                {
+                    StackTracesUtility.ChangeFrame(frame);
+                }
+            }
         }
     }
 }
